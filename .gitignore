@@ -1,0 +1,8 @@
+node_modules
+*env*
+*ssl*
+*credentials*
+*DS_Store
+*.pem
+*.tar
+*.gz
