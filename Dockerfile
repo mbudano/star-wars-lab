@@ -3,7 +3,7 @@ RUN mkdir /app
 RUN addgroup appuser && adduser appuser --ingroup appuser --gecos "User to run app" --disabled-password
 RUN chown appuser:appuser /app
 USER appuser
-COPY package.json /app/
+COPY --chown=appuser:appuser package.json /app/
 ADD server /app/server
 WORKDIR /app
 RUN npm install
