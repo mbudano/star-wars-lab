@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  labels:
+    app: star-wars-webpage
+  name: star-wars-webpage-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: star-wars-webpage
+  template:
+    metadata:
+      labels:
+        app: star-wars-webpage
+    spec:
+      containers:
+      - name: star-wars-webpage  
+        image: star-wars-webpage:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: star-wars-webpage-service
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: star-wars-webpage
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+  generation: 1
+  labels:
+    app: star-wars
+  name: star-wars-ingress
+spec:
+  rules:
+  - host: star-wars.cloud-team.sao01.containers.appdomain.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: star-wars-webpage-service
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - star-wars.cloud-team.sao01.containers.appdomain.cloud
+    secretName: cloud-team
