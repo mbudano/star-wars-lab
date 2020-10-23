@@ -6,3 +6,4 @@ node_modules
 *.pem
 *.tar
 *.gz
+package-lock.json
